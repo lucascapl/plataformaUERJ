@@ -1,0 +1,15 @@
+body {
+    background-image: url("/static/assets/img/alunoonline/fundo.jpg");
+    background-size: cover;
+}
+
+.botaoLogin {
+    color:white;
+    background-color: darkgray;
+    border-color: darkgray;
+}
+
+.botaoLogin:hover {
+    background-color: gray;
+    border-color:gray
+}
