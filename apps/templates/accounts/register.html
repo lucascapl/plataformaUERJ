@@ -17,17 +17,17 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/static/assets/css/adminlte.min.css">
 
+  <link rel="stylesheet" href="/static/assets/css/login.css">
+
 {% endblock stylesheets %}
 
 {% block content %}
-
+<body>
   <div class="register-box">
-
     <div class="login-logo">
         <a target="_blank" rel="noopener noreferrer" 
-           href="https://appseed.us/product/adminlte/flask/"><b>Admin</b>LTE Flask</a>
+           href="/login"><b>Aluno Online</b>UERJ</a>
     </div>    
-
     <div class="card">
       <div class="card-body register-card-body">
         <p class="login-box-msg">
@@ -35,17 +35,14 @@
                 <span class="text-danger">{{ msg | safe }}</span>
             {% else %}
             <span>
-                Add your credentials
+                Adicione seus dados
             </span>
             {% endif %}            
         </p>
-
         <form role="form" method="post" action="">
-
           {{ form.hidden_tag() }}
-
           <div class="input-group mb-3">
-            {{ form.username(placeholder="Username", class="form-control") }}
+            {{ form.username(placeholder="Nome Completo", class="form-control") }}
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-user"></span>
@@ -61,46 +58,41 @@
             </div>
           </div>
           <div class="input-group mb-3">
-            {{ form.password(placeholder="Password", class="form-control", type="password") }}
+            {{ form.password(placeholder="Senha", class="form-control", type="password") }}
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
               </div>
             </div>
           </div>
-          
           <div class="row">
             <div class="col-8">
               <div class="icheck-primary">
                 <input type="checkbox" id="agreeTerms" name="terms" value="agree">
                 <label for="agreeTerms">
-                I agree to the <a href="#">terms</a>
+                Eu aceito os <a href="#">termos</a>
                 </label>
               </div>
             </div>
-            <!-- /.col -->
             <div class="col-4">
-              <button type="submit" name="register" class="btn btn-primary btn-block">Register</button>
+              <button type="submit" name="register" class="btn btn-primary btn-block botaoLogin">Cadastrar</button>
             </div>
-            <!-- /.col -->
           </div>
         </form>
-
         <br />
         <div class="text-center">
-            Have an account? <a href="{{ url_for('authentication_blueprint.login') }}" class="text-center">Login</a>
+            Já possui conta? <a href="{{ url_for('authentication_blueprint.login') }}" class="text-center">Login</a>
             <br />
             <br />
-            &copy; ColorLib 
+            &copy; Made By
             <a target="_blank" rel="noopener noreferrer"
-               href="https://appseed.us/product/adminlte/flask/"><b>Admin</b>LTE</a> 
-            - coded by <a target="_blank" rel="noopener noreferrer" href="https://appseed.us">AppSeed</a>.
+               href="https://github.com/lucascapl"><b>Inova</b>DEV</a> 
+            - coded by <a target="_blank" rel="noopener noreferrer" href="https://github.com/lucascapl">Lucas Leal</a>.
         </div>
-
       </div>
-      <!-- /.form-box -->
-    </div><!-- /.card -->
+    </div>
   </div>
+</body>
 
 {% endblock content %}
 
