@@ -6,6 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 import os
 import hashlib
 import binascii
+import datetime
 
 # Inspiration -> https://www.vitoshacademy.com/hashing-passwords-in-python/
 
@@ -32,3 +33,11 @@ def verify_pass(provided_password, stored_password):
                                   100000)
     pwdhash = binascii.hexlify(pwdhash).decode('ascii')
     return pwdhash == stored_password
+
+def matriculaGenerator():
+    dataHoraAtual = datetime.datetime.now()
+    dataFormatada = dataHoraAtual.strftime("%d/%m/%y")
+    horaFormatada = dataHoraAtual.strftime("%H:%M")
+
+    dataHoraFormatada = f"{dataFormatada} - {horaFormatada}"
+    return dataHoraFormatada
