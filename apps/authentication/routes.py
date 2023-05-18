@@ -13,7 +13,7 @@ from flask_login import (
 from apps import db, login_manager
 from apps.authentication import blueprint
 from apps.authentication.forms import LoginForm, CreateAccountForm
-from apps.authentication.models import Users
+from apps.authentication.models import Aluno
 
 from apps.authentication.util import verify_pass
 
@@ -35,7 +35,7 @@ def login():
         password = request.form['password']
 
         # Locate user by cpf
-        user = Users.query.filter_by(matricula=matricula).first()
+        user = Aluno.query.filter_by(matricula=matricula).first()
 
         # Check the password
         if user and verify_pass(password, user.password):
@@ -63,7 +63,7 @@ def register():
         email = request.form['email']
 
         # Check usename exists
-        user = Users.query.filter_by(cpf=cpf).first()
+        user = Aluno.query.filter_by(cpf=cpf).first()
         if user:
             return render_template('accounts/register.html',
                                    msg='CPF já registrado',
@@ -71,7 +71,7 @@ def register():
                                    form=create_account_form)
 
         # Check email exists
-        user = Users.query.filter_by(email=email).first()
+        user = Aluno.query.filter_by(email=email).first()
         if user:
 
             return render_template('accounts/register.html',
@@ -80,7 +80,7 @@ def register():
                                    form=create_account_form)
 
         # else we can create the user
-        user = Users(**request.form)
+        user = Aluno(**request.form)
         user.geraMatricula()
         user.dataCadastro()
         db.session.add(user)

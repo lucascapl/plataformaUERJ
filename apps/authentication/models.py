@@ -10,7 +10,7 @@ import datetime
 import random as rdm
 from apps.authentication.util import hash_pass
 
-class Users(db.Model, UserMixin):
+class Aluno(db.Model, UserMixin):
 
     __tablename__ = 'Users'
 
@@ -61,11 +61,11 @@ class Users(db.Model, UserMixin):
 
 @login_manager.user_loader
 def user_loader(id):
-    return Users.query.filter_by(id=id).first()
+    return Aluno.query.filter_by(id=id).first()
 
 
 @login_manager.request_loader
 def request_loader(request):
     email = request.form.get('email')
-    user = Users.query.filter_by(email=email).first()
+    user = Aluno.query.filter_by(email=email).first()
     return user if user else None
