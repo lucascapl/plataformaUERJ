@@ -11,7 +11,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="static/assets/img/alunoonline/avatar/lucas.jpg" class="img-circle elevation-2" alt="User Image">
+          <img id="imagemAvatar" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info" style="color: aliceblue;">
             {{ current_user.nomeCompleto }}
@@ -50,4 +50,17 @@
     </div>
     <!-- /.sidebar -->
   </aside>
-  
+  <script>
+    function randAvatar() {
+      let numeroAleatorio = Math.floor(Math.random() * 3) + 1;
+
+      if (numeroAleatorio === 1) {
+        return "static/assets/img/alunoonline/avatar/tartaruga.jpeg";
+      } else if (numeroAleatorio === 2) {
+        return "static/assets/img/alunoonline/avatar/coruja.jpeg";
+      } else {
+        return "static/assets/img/alunoonline/avatar/livro.jpeg";
+      }
+    }
+    document.getElementById("imagemAvatar").src = randAvatar();
+</script>
