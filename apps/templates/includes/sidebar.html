@@ -13,9 +13,8 @@
         <div class="image">
           <img src="static/assets/img/alunoonline/avatar/lucas.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
-        <div class="info">
-          <a href="{{ url_for('authentication_blueprint.logout') }}" class="d-block">
-            {{ current_user.username }} - Sair
+        <div class="info" style="color: aliceblue;">
+            {{ current_user.nomeCompleto }}
           </a>
         </div>
       </div>

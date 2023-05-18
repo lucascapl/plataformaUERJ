@@ -31,11 +31,11 @@ def login():
     if 'login' in request.form:
 
         # read form data
-        username = request.form['username']
+        matricula = request.form['matricula']
         password = request.form['password']
 
-        # Locate user
-        user = Users.query.filter_by(username=username).first()
+        # Locate user by cpf
+        user = Users.query.filter_by(matricula=matricula).first()
 
         # Check the password
         if user and verify_pass(password, user.password):
@@ -59,27 +59,30 @@ def register():
     create_account_form = CreateAccountForm(request.form)
     if 'register' in request.form:
 
-        username = request.form['username']
+        cpf = request.form['cpf']
         email = request.form['email']
 
         # Check usename exists
-        user = Users.query.filter_by(username=username).first()
+        user = Users.query.filter_by(cpf=cpf).first()
         if user:
             return render_template('accounts/register.html',
-                                   msg='Username already registered',
+                                   msg='CPF já registrado',
                                    success=False,
                                    form=create_account_form)
 
         # Check email exists
         user = Users.query.filter_by(email=email).first()
         if user:
+
             return render_template('accounts/register.html',
-                                   msg='Email already registered',
+                                   msg='Email já registrado',
                                    success=False,
                                    form=create_account_form)
 
         # else we can create the user
         user = Users(**request.form)
+        user.geraMatricula()
+        user.dataCadastro()
         db.session.add(user)
         db.session.commit()
 

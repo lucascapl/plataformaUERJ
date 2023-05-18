@@ -42,7 +42,15 @@
         <form role="form" method="post" action="">
           {{ form.hidden_tag() }}
           <div class="input-group mb-3">
-            {{ form.username(placeholder="Nome Completo", class="form-control") }}
+            {{ form.nomeCompleto(placeholder="Nome Completo", class="form-control") }}
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-user"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            {{ form.cpf(placeholder="CPF", class="form-control") }}
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-user"></span>

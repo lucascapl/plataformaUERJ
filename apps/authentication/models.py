@@ -6,7 +6,8 @@ Copyright (c) 2019 - present AppSeed.us
 from flask_login import UserMixin
 
 from apps import db, login_manager
-
+import datetime
+import random as rdm
 from apps.authentication.util import hash_pass
 
 class Users(db.Model, UserMixin):
@@ -14,8 +15,8 @@ class Users(db.Model, UserMixin):
     __tablename__ = 'Users'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), unique=True)
     nomeCompleto = db.Column(db.String)
+    cpf = db.Column(db.String(11), unique=True)
     email = db.Column(db.String(64), unique=True)
     matricula = db.Column(db.String(12), unique=True)
     periodo = db.Column(db.Integer)
@@ -38,6 +39,24 @@ class Users(db.Model, UserMixin):
 
     def __repr__(self):
         return str(self.username)
+    
+    def dataCadastro(self):
+        dataHoraAtual = datetime.datetime.now()
+        dataFormatada = dataHoraAtual.strftime("%d/%m/%y")
+        horaFormatada = dataHoraAtual.strftime("%H:%M")
+
+        dataHoraFormatada = f"{dataFormatada} - {horaFormatada}"
+        self.cadastro = dataHoraFormatada
+
+    def geraMatricula(self):
+        dataHoraAtual = datetime.datetime.now()
+        matricula = dataHoraAtual.year
+        matricula = str(matricula)
+        for _ in range(0,8):
+            numMatricula = rdm.randint(0,9)
+            numToken = str(numMatricula)
+            matricula = matricula + numToken
+        self.matricula = matricula
 
 
 @login_manager.user_loader
@@ -47,6 +66,6 @@ def user_loader(id):
 
 @login_manager.request_loader
 def request_loader(request):
-    username = request.form.get('username')
-    user = Users.query.filter_by(username=username).first()
+    email = request.form.get('email')
+    user = Users.query.filter_by(email=email).first()
     return user if user else None

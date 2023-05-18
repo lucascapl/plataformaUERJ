@@ -11,8 +11,8 @@ from wtforms.validators import Email, DataRequired
 
 
 class LoginForm(FlaskForm):
-    username = StringField('Username',
-                         id='username_login',
+    matricula = StringField('matricula',
+                         id='matricula_login',
                          validators=[DataRequired()])
     password = PasswordField('Password',
                              id='pwd_login',
@@ -20,8 +20,8 @@ class LoginForm(FlaskForm):
 
 
 class CreateAccountForm(FlaskForm):
-    username = StringField('Username',
-                         id='username_create',
+    cpf = StringField('cpf',
+                         id='cpf_create',
                          validators=[DataRequired()])
     email = StringField('Email',
                       id='email_create',
@@ -29,3 +29,6 @@ class CreateAccountForm(FlaskForm):
     password = PasswordField('Password',
                              id='pwd_create',
                              validators=[DataRequired()])
+    nomeCompleto = StringField('nomeCompleto',
+                      id='nomeCompleto_create',
+                      validators=[DataRequired(), Email()])
