@@ -15,7 +15,11 @@ class Users(db.Model, UserMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True)
+    nomeCompleto = db.Column(db.String)
     email = db.Column(db.String(64), unique=True)
+    matricula = db.Column(db.String(12), unique=True)
+    periodo = db.Column(db.Integer)
+    cadastro = db.Column(db.String(16))
     password = db.Column(db.LargeBinary)
 
     def __init__(self, **kwargs):
