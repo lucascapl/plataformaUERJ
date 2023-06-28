@@ -12,8 +12,8 @@ from flask_login import (
 
 from apps import db, login_manager
 from apps.authentication import blueprint
-from apps.authentication.forms import LoginForm, CreateAccountForm
-from apps.authentication.models import Aluno
+from apps.authentication.forms import LoginForm, CreateAccountForm, CreateAccountProfessorForm
+from apps.authentication.models import Aluno, Professor, Disciplina, Turma
 
 from apps.authentication.util import verify_pass
 
@@ -93,6 +93,46 @@ def register():
 
     else:
         return render_template('accounts/register.html', form=create_account_form)
+    
+@blueprint.route('/registerProfessor', methods=['GET', 'POST'])
+def registerProfessor():
+    create_account_form = CreateAccountProfessorForm(request.form)
+    if 'register' in request.form:
+
+        cpf = request.form['cpf']
+        email = request.form['email']
+
+        # Check usename exists
+        user = Professor.query.filter_by(cpf=cpf).first()
+        if user:
+            return render_template('accounts/registerProfessor.html',
+                                   msg='CPF já registrado',
+                                   success=False,
+                                   form=create_account_form)
+
+        # Check email exists
+        user = Professor.query.filter_by(email=email).first()
+        if user:
+
+            return render_template('accounts/registerProfessor.html',
+                                   msg='Email já registrado',
+                                   success=False,
+                                   form=create_account_form)
+
+        # else we can create the user
+        user = Professor(**request.form)
+        user.geraMatricula()
+        user.dataCadastro()
+        db.session.add(user)
+        db.session.commit()
+
+        return render_template('accounts/registerProfessor.html',
+                               msg='User created please <a href="/login">login</a>',
+                               success=True,
+                               form=create_account_form)
+
+    else:
+        return render_template('accounts/registerProfessor.html', form=create_account_form)
 
 
 @blueprint.route('/logout')

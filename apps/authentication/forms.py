@@ -32,3 +32,17 @@ class CreateAccountForm(FlaskForm):
     nomeCompleto = StringField('nomeCompleto',
                       id='nomeCompleto_create',
                       validators=[DataRequired(), Email()])
+
+class CreateAccountProfessorForm(FlaskForm):
+    cpf = StringField('cpf',
+                         id='cpf_create',
+                         validators=[DataRequired()])
+    email = StringField('Email',
+                      id='email_create',
+                      validators=[DataRequired(), Email()])
+    password = PasswordField('Password',
+                             id='pwd_create',
+                             validators=[DataRequired()])
+    nomeCompleto = StringField('nomeCompleto',
+                      id='nomeCompleto_create',
+                      validators=[DataRequired(), Email()])
