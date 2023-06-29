@@ -4,12 +4,17 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from flask_login import UserMixin
-from sqlalchemy import Column, Integer, String,ForeignKey,Float, func, desc,LargeBinary
+from sqlalchemy import Column, Integer, String, ForeignKey, LargeBinary, Table
 from sqlalchemy.orm import relationship
 from apps import db, login_manager
 import datetime
 import random as rdm
 from apps.authentication.util import hash_pass
+
+alunos_turmas = db.Table('alunos_turmas',
+    db.Column('aluno_id', db.Integer, db.ForeignKey('Aluno.id'), primary_key=True),
+    db.Column('turma_id', db.Integer, db.ForeignKey('Turma.id'), primary_key=True)
+)
 
 class Aluno(db.Model, UserMixin):
 
@@ -23,7 +28,7 @@ class Aluno(db.Model, UserMixin):
     periodo = Column(Integer)
     cadastro = Column(String(16))
     password = Column(LargeBinary)
-    turmaID = Column(Integer, ForeignKey('Turma.id'))
+    turmas = db.relationship('Turma', secondary=alunos_turmas, backref=db.backref('alunos', lazy='dynamic'))
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():
@@ -54,11 +59,12 @@ class Aluno(db.Model, UserMixin):
         dataHoraAtual = datetime.datetime.now()
         matricula = dataHoraAtual.year
         matricula = str(matricula)
-        for _ in range(0,8):
-            numMatricula = rdm.randint(0,9)
+        for _ in range(0, 8):
+            numMatricula = rdm.randint(0, 9)
             numToken = str(numMatricula)
             matricula = matricula + numToken
         self.matricula = matricula
+
 
 class Professor(db.Model, UserMixin):
 
@@ -102,11 +108,12 @@ class Professor(db.Model, UserMixin):
         dataHoraAtual = datetime.datetime.now()
         matricula = dataHoraAtual.year
         matricula = str(matricula)
-        for _ in range(0,8):
-            numMatricula = rdm.randint(0,9)
+        for _ in range(0, 8):
+            numMatricula = rdm.randint(0, 9)
             numToken = str(numMatricula)
             matricula = matricula + numToken
-        self.matricula = 'p'+matricula
+        self.matricula = 'p' + matricula
+
 
 class Disciplina(db.Model):
 
@@ -115,6 +122,7 @@ class Disciplina(db.Model):
     id = Column(Integer, primary_key=True)
     nome = Column(String)
 
+
 class Turma(db.Model):
 
     __tablename__ = 'Turma'
@@ -122,7 +130,7 @@ class Turma(db.Model):
     id = Column(Integer, primary_key=True)
     professorID = Column(Integer, ForeignKey('Professor.id'))
     disciplinaID = Column(Integer, ForeignKey('Disciplina.id'))
-    relacaoAlunos = relationship('Aluno')
+
 
 @login_manager.user_loader
 def user_loader(id):

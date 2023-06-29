@@ -15,7 +15,7 @@ from apps.authentication import blueprint
 from apps.authentication.forms import LoginForm, CreateAccountForm, CreateAccountProfessorForm
 from apps.authentication.models import Aluno, Professor, Disciplina, Turma
 
-from apps.authentication.util import verify_pass
+from apps.authentication.util import verify_pass, hash_pass
 
 
 @blueprint.route('/')
@@ -94,45 +94,76 @@ def register():
     else:
         return render_template('accounts/register.html', form=create_account_form)
     
-@blueprint.route('/registerProfessor', methods=['GET', 'POST'])
-def registerProfessor():
-    create_account_form = CreateAccountProfessorForm(request.form)
-    if 'register' in request.form:
-
-        cpf = request.form['cpf']
-        email = request.form['email']
-
-        # Check usename exists
-        user = Professor.query.filter_by(cpf=cpf).first()
-        if user:
-            return render_template('accounts/registerProfessor.html',
-                                   msg='CPF já registrado',
-                                   success=False,
-                                   form=create_account_form)
-
-        # Check email exists
-        user = Professor.query.filter_by(email=email).first()
-        if user:
-
-            return render_template('accounts/registerProfessor.html',
-                                   msg='Email já registrado',
-                                   success=False,
-                                   form=create_account_form)
-
-        # else we can create the user
-        user = Professor(**request.form)
-        user.geraMatricula()
-        user.dataCadastro()
-        db.session.add(user)
+@blueprint.route('/cadastrarDisciplina', methods=['POST'])
+def cadastrarDisciplina():
+    if request.method == 'POST':
+        nomesMaterias = request.json["nomes"]
+        
+        for nomeMateria in nomesMaterias:
+            novaDisciplina = Disciplina()
+            novaDisciplina.nome = nomeMateria
+            db.session.add(novaDisciplina)
+        
         db.session.commit()
-
-        return render_template('accounts/registerProfessor.html',
-                               msg='User created please <a href="/login">login</a>',
-                               success=True,
-                               form=create_account_form)
-
+        return '200'
     else:
-        return render_template('accounts/registerProfessor.html', form=create_account_form)
+        return '500'
+    
+@blueprint.route('/registrarProfessores', methods=['POST'])
+def registrarProfessores():
+    if request.method == 'POST':
+        nomesProfessores = request.json["nomes"]
+        senha = request.json["senha"]
+        cpfs = request.json["cpfs"]
+
+        for i in range(len(nomesProfessores)):
+            nome = nomesProfessores[i]
+            cpf = cpfs[i]
+
+            novoProfessor = Professor()
+            novoProfessor.nomeCompleto = nome
+            emailProfessor = novoProfessor.nomeCompleto.replace(" ", "")
+            emailProfessor = emailProfessor.lower()
+            emailProfessor = emailProfessor + 'teste@example.com'
+            novoProfessor.email = emailProfessor
+            novoProfessor.password = hash_pass(senha)
+            novoProfessor.geraMatricula()
+            novoProfessor.dataCadastro()
+            novoProfessor.cpf = cpf  # Adiciona o CPF ao professor
+            db.session.add(novoProfessor)
+
+        db.session.commit()
+        return '200'
+    else:
+        return '500'
+
+@blueprint.route('/registrarAlunos', methods=['POST'])
+def registrarAlunos():
+    if request.method == 'POST':
+        nomesAlunos = request.json["nomes"]
+        senha = request.json["senha"]
+        cpfs = request.json["cpfs"]
+
+        for i in range(len(nomesAlunos)):
+            nome = nomesAlunos[i]
+            cpf = cpfs[i]
+
+            novoAluno = Aluno()
+            novoAluno.nomeCompleto = nome
+            emailProfessor = novoAluno.nomeCompleto.replace(" ", "")
+            emailProfessor = emailProfessor.lower()
+            emailProfessor = emailProfessor + 'teste@example.com'
+            novoAluno.email = emailProfessor
+            novoAluno.password = hash_pass(senha)
+            novoAluno.geraMatricula()
+            novoAluno.dataCadastro()
+            novoAluno.cpf = cpf  # Adiciona o CPF ao professor
+            db.session.add(novoAluno)
+
+        db.session.commit()
+        return '200'
+    else:
+        return '500'
 
 
 @blueprint.route('/logout')
