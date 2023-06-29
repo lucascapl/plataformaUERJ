@@ -124,12 +124,15 @@ class Disciplina(db.Model):
 
 
 class Turma(db.Model):
-
     __tablename__ = 'Turma'
 
     id = Column(Integer, primary_key=True)
     professorID = Column(Integer, ForeignKey('Professor.id'))
-    disciplinaID = Column(Integer, ForeignKey('Disciplina.id'))
+    nomeProfessor = Column(String)
+    professor = relationship("Professor", foreign_keys=[professorID])
+
+    def __repr__(self):
+        return f"Turma {self.id}"
 
 
 @login_manager.user_loader
